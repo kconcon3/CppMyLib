@@ -26,8 +26,8 @@ public:
 		const std::type_info*		pTypeInfo;		// コンポーネントの型(クラス)のポインタ(*pTypeInfo で型が取れます)
 
 		ComponentExtInfo() :
-			pComponent(NULL_PTR),
-			pTypeInfo(NULL_PTR)
+			pComponent(null_ptr),
+			pTypeInfo(null_ptr)
 		{}
 	};
 
@@ -46,7 +46,7 @@ private:
 
 		ComponentInfo() :
 			pComponent(),
-			pTypeInfo(NULL_PTR)
+			pTypeInfo(null_ptr)
 		{}
 	};
 
@@ -76,8 +76,8 @@ public:
 	template<class T_>
 	T_* CreateComponent(uint64_t insertIdx)
 	{
-		DBG_ASSERT(m_componentList.size()<COMPONENT_MAX, "error");
-		DBG_ASSERT(m_componentList.size()<m_localComponentNumMax, "error");
+		ASSERT_PRINT(m_componentList.size()<COMPONENT_MAX, "size = %zu", m_componentList.size());
+		ASSERT_PRINT(m_componentList.size()<m_localComponentNumMax, "size = %zu / m_localComponentNumMax = %llu", m_componentList.size(), m_localComponentNumMax);
 
 		ComponentInfo tmpInfo;
 		tmpInfo.pComponent = std::make_shared<T_>();	// インスタンス作成 
@@ -179,7 +179,7 @@ public:
 	*/
 	GeneralBaseComponent* GetComponentPtr(uint64_t idx)
 	{
-		DBG_ASSERT(idx<m_componentList.size(), "error");
+		ASSERT_PRINT(idx<m_componentList.size(), "size = %zu", m_componentList.size());
 
 		return m_componentList.at(idx).pComponent.get();
 	}
@@ -217,7 +217,7 @@ private:
 	template<class T_>
 	void DeleteComponent(T_* pComponent, bool typeChkFlg)
 	{
-		if (pComponent == NULL_PTR) return;
+		if (pComponent == null_ptr) return;
 
 		bool delFlg = false;
 
@@ -225,7 +225,7 @@ private:
 		{
 			if (pComponent == it->pComponent.get())
 			{
-				if (typeChkFlg) DBG_ASSERT(*it->pTypeInfo == typeid(T_), "error");
+				if (typeChkFlg) { ASSERT_PRINT(*it->pTypeInfo == typeid(T_), "error"); }
 
 				it->pComponent.reset();		// 念の為 
 				it = m_componentList.erase(it);

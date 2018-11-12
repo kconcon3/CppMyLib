@@ -12,7 +12,7 @@
  */
 //********************************************************************************************
 GeneralBaseComponent::GeneralBaseComponent() :
-	m_pParent(NULL_PTR)
+	m_pParent(null_ptr)
 {
 }
 
